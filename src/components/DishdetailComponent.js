@@ -32,7 +32,6 @@ class Dishdetail extends Component {
 
         if (dish != null)
             return(
-                <div className="container">
                 <div className="row">
                     <div className="col-xs-12 col-sm-12 col-md-5 m-1">
                         <Card>
@@ -45,7 +44,6 @@ class Dishdetail extends Component {
                     </div>
                     {this.renderComments(dish.comments)}
                 </div>
-                </div>
             );
         else
             return(
@@ -55,7 +53,9 @@ class Dishdetail extends Component {
 
     render() {
         return (
-            this.renderDish(this.props.dish)
+            <div className="container">
+                {this.renderDish(this.props.dish)}
+            </div>
         );
     }
 }
