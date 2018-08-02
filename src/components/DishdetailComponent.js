@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import { Control, LocalForm, Errors } from 'react-redux-form';
 
-function RenderComments({comments}) {
+function RenderComments({comments, addComment, dishId}) {
 
         const commentsList = comments.map((c) => {
             return (
@@ -25,6 +25,7 @@ function RenderComments({comments}) {
             return (
                 <React.Fragment>
                     {commentsList}
+                    <CommentForm dishId={dishId} addComment={addComment} />
                 </React.Fragment>
             )
 }
@@ -68,8 +69,8 @@ class CommentForm extends Component {
     }
 
     handleSubmit(values) {
-        console.log("Current State is: " + JSON.stringify(values));
-        alert("Current State is: " + JSON.stringify(values));
+       this.modalToggle();
+       this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
     render() {
@@ -153,8 +154,10 @@ const DishDetail = (props) => {
                         <RenderDish dish={props.dish} />
                         <div className="col-xs-12 col-sm-12 col-md-5 m-1">
                             <h4>Comments</h4>
-                            <RenderComments comments={props.comments} />
-                            <CommentForm/>
+                            <RenderComments comments={props.comments} 
+                                addComment={props.addComment} 
+                                dishId={props.dish.id}
+                                />
                         </div>
                 </div>
             </div>
