@@ -53,15 +53,42 @@ const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => (val) && (val.length >= len);
 
-const CommentForm = (props) => {
+class CommentForm extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            modalOpen: false
+        }
+        this.modalToggle = this.modalToggle.bind(this);
+    }
+
+    modalToggle() {
+        this.setState({modalOpen: !this.state.modalOpen});
+    }
+
+    handleSubmit(values) {
+        console.log("Current State is: " + JSON.stringify(values));
+        alert("Current State is: " + JSON.stringify(values));
+    }
+
+    render() {
         return(
-                <LocalForm className="m-3" onSubmit={(values) => props.action(values)}>
+            <React.Fragment>
+            <Button outline onClick={this.modalToggle}>
+                <span className="fa fa-pencil fa-lg"></span> Submit Comments
+            </Button>
+            <Modal isOpen={this.state.modalOpen} toggle={this.modalToggle}>
+            <ModalHeader toggle={this.modalToggle}>
+                Submit Comment
+            </ModalHeader>
+            <ModalBody>
+                <LocalForm className="m-3" onSubmit={(values) => this.handleSubmit(values)}>
                         <Row>
                             <Label htmlFor="rating">Rating</Label>
                         </Row>
                         <Row className="form-group">
-                            <Control.select model=".rating" name="rating" className="form-control">
+                            <Control.select model=".rating" name="rating" defaultValue="1" className="form-control">
                                 <option>1</option>
                                 <option>2</option>
                                 <option>3</option>
@@ -100,71 +127,42 @@ const CommentForm = (props) => {
                                     <Button type="submit" color="primary"> Submit </Button>
                         </Row>
                 </LocalForm>
+            </ModalBody>
+            </Modal>
+            </React.Fragment>
         );
+    }
 }
 
-class DishDetail extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            modalOpen: false
-        }
-        this.modalToggle = this.modalToggle.bind(this);
-    }
-
-    modalToggle() {
-        this.setState({modalOpen: !this.state.modalOpen});
-    }
-
-    handleSubmit(values) {
-        console.log("Current State is: " + JSON.stringify(values));
-        alert("Current State is: " + JSON.stringify(values));
-    }
-
-    render() {
-
-    const props = this.props;
+const DishDetail = (props) => {
 
     if (props.dish != null)
         return (
             <div className="container">
                 <div className="row">
-                <Breadcrumb>
-                    <BreadcrumbItem><Link to='/menu'>Menu</Link></BreadcrumbItem>
-                    <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
-                </Breadcrumb>
-                <div className="col-12">
-                    <h3>{props.dish.name}</h3>
-                    <hr/>
-                </div>
+                    <Breadcrumb>
+                        <BreadcrumbItem><Link to='/menu'>Menu</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>{props.dish.name}</h3>
+                        <hr/>
+                    </div>
                 </div>
                 <div className="row">
                         <RenderDish dish={props.dish} />
                         <div className="col-xs-12 col-sm-12 col-md-5 m-1">
                             <h4>Comments</h4>
                             <RenderComments comments={props.comments} />
-                            <Button outline onClick={this.modalToggle}>
-                                <span className="fa fa-pencil fa-lg"></span> Submit Comments
-                            </Button>
+                            <CommentForm/>
                         </div>
-                        <Modal isOpen={this.state.modalOpen} toggle={this.modalToggle}>
-                            <ModalHeader toggle={this.modalToggle}>
-                                Submit Comment
-                            </ModalHeader>
-                            <ModalBody>
-                                <CommentForm action={this.handleSubmit}/>
-                            </ModalBody>
-                        </Modal>
                 </div>
             </div>
-        );
+        )
     else
         return (
             <div></div>
         )
-
-    }
 }
 
 
